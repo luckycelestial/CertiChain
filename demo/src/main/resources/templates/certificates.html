@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate Management | CertiChain</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      🔗 <span>CertiChain</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/verify">Public Verification</a></li>
+      <li><a href="/certificates" class="active">Certificates</a></li>
+      <li><a href="/accounting">Accounting & Billing</a></li>
+      <li><a href="/reports">Financial Reports</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Certificate Issuance Form -->
+    <div class="card">
+      <div class="card-title">
+        <span>🎓 Issue New Tamper-Proof Certificate (University Registrar)</span>
+        <span class="badge badge-info">SHA-256 Enabled</span>
+      </div>
+
+      <form action="/certificates/issue" method="POST" th:object="${issueRequest}">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Certificate Serial / Roll Number *</label>
+            <input type="text" th:field="*{certificateNumber}" class="form-control" placeholder="e.g. CERT-2026-722801" required>
+          </div>
+
+          <div class="form-group">
+            <label>Student Full Name *</label>
+            <input type="text" th:field="*{studentName}" class="form-control" placeholder="e.g. Pavithran P N" required>
+          </div>
+
+          <div class="form-group">
+            <label>Student Email Address</label>
+            <input type="email" th:field="*{studentEmail}" class="form-control" placeholder="e.g. student@example.com">
+          </div>
+
+          <div class="form-group">
+            <label>Degree Title *</label>
+            <input type="text" th:field="*{degree}" class="form-control" placeholder="e.g. Bachelor of Technology" required>
+          </div>
+
+          <div class="form-group">
+            <label>Major / Department</label>
+            <input type="text" th:field="*{major}" class="form-control" placeholder="e.g. Artificial Intelligence & Data Science">
+          </div>
+
+          <div class="form-group">
+            <label>CGPA / Grade</label>
+            <input type="number" step="0.01" th:field="*{cgpa}" class="form-control" placeholder="e.g. 9.45">
+          </div>
+
+          <div class="form-group">
+            <label>Issue Date *</label>
+            <input type="date" th:field="*{issueDate}" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Issuing Institution *</label>
+            <select th:field="*{institutionId}" class="form-control" required>
+              <option value="">Select Accredited Institution</option>
+              <option th:each="inst : ${institutions}" th:value="${inst.id}" th:text="${inst.name + ' (' + inst.code + ')'}"></option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: right;">
+          <button type="submit" class="btn btn-primary">🔐 Calculate SHA-256 & Issue Credential</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- All Certificates Table -->
+    <div class="card">
+      <div class="card-title">
+        <span>📜 All On-Chain Credentials</span>
+        <span class="badge badge-success" th:text="${#lists.size(certificates)} + ' Records'">0 Records</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Serial Number</th>
+              <th>Student Name</th>
+              <th>Degree / Program</th>
+              <th>Institution</th>
+              <th>Issue Date</th>
+              <th>SHA-256 Hash</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="cert : ${certificates}">
+              <td th:text="${cert.id}">1</td>
+              <td style="font-weight: 600;" th:text="${cert.certificateNumber}">CERT-001</td>
+              <td th:text="${cert.studentName}">Pavithran</td>
+              <td th:text="${cert.degree}">B.Tech AIDS</td>
+              <td th:text="${cert.institution.name}">SECE</td>
+              <td th:text="${cert.issueDate}">2026-06-15</td>
+              <td>
+                <span class="hash-pill" th:text="${#strings.substring(cert.sha256Hash,0,16) + '...'}">a8f5...</span>
+              </td>
+              <td>
+                <a th:href="@{/verify(hash=${cert.sha256Hash})}" class="btn btn-sm btn-primary">Verify</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>CertiChain Platform &copy; 2026 | Powered by Spring Boot, MySQL & SHA-256 Cryptography</p>
+  </footer>
+</body>
+</html>

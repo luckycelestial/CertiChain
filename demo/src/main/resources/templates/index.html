@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CertiChain | Blockchain Certificate Platform</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      🔗 <span>CertiChain</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" class="active">Dashboard</a></li>
+      <li><a href="/verify">Public Verification</a></li>
+      <li><a href="/certificates">Certificates</a></li>
+      <li><a href="/accounting">Accounting & Billing</a></li>
+      <li><a href="/reports">Financial Reports</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <!-- Hero -->
+    <div class="hero">
+      <h1>Blockchain-Backed Certificate Platform</h1>
+      <p>Tamper-proof academic credential issuance, SHA-256 cryptographic verification, and integrated double-entry accounting.</p>
+      <div style="display: flex; justify-content: center; gap: 1rem;">
+        <a href="/verify" class="btn btn-primary">🔍 Verify Certificate Hash</a>
+        <a href="/certificates" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;">🎓 Issue New Certificate</a>
+      </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Issued Certificates</h3>
+        <div class="value" th:text="${totalCerts}">0</div>
+        <p style="color: var(--accent-green); font-size: 0.8rem; margin-top: 0.4rem;">✓ Tamper-proof SHA-256</p>
+      </div>
+      <div class="stat-card">
+        <h3>Verification Queries</h3>
+        <div class="value" th:text="${totalVerifications}">0</div>
+        <p style="color: var(--accent-cyan); font-size: 0.8rem; margin-top: 0.4rem;">⚡ Instant API Lookups</p>
+      </div>
+      <div class="stat-card">
+        <h3>Platform Revenue</h3>
+        <div class="value" th:text="'$' + ${#numbers.formatDecimal(financials.totalRevenue, 1, 2)}">$0.00</div>
+        <p style="color: var(--accent-blue); font-size: 0.8rem; margin-top: 0.4rem;">📊 Double-Entry Balanced</p>
+      </div>
+      <div class="stat-card">
+        <h3>Accredited Institutions</h3>
+        <div class="value" th:text="${totalInstitutions}">0</div>
+        <p style="color: var(--accent-purple); font-size: 0.8rem; margin-top: 0.4rem;">🏛️ Verified Registrars</p>
+      </div>
+    </div>
+
+    <!-- Recent Certificates Table -->
+    <div class="card">
+      <div class="card-title">
+        <span>📜 Recently Issued Academic Credentials</span>
+        <a href="/certificates" class="btn btn-sm btn-primary">+ Issue Certificate</a>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Cert Number</th>
+              <th>Student Name</th>
+              <th>Degree / Major</th>
+              <th>Institution</th>
+              <th>Issue Date</th>
+              <th>Cryptographic Hash</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="cert : ${recentCerts}">
+              <td style="font-weight: 600;" th:text="${cert.certificateNumber}">CERT-001</td>
+              <td th:text="${cert.studentName}">John Doe</td>
+              <td th:text="${cert.degree + ' (' + cert.major + ')'}">B.Tech CSE</td>
+              <td th:text="${cert.institution.name}">Anna University</td>
+              <td th:text="${cert.issueDate}">2026-06-15</td>
+              <td>
+                <a th:href="@{/verify(hash=${cert.sha256Hash})}" class="hash-pill" th:text="${#strings.substring(cert.sha256Hash,0,12) + '...'}">a8f5...</a>
+              </td>
+              <td>
+                <span th:if="${cert.status.name() == 'ISSUED'}" class="badge badge-success">Valid</span>
+                <span th:if="${cert.status.name() == 'REVOKED'}" class="badge badge-danger">Revoked</span>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(recentCerts)}">
+              <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No certificates issued yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Verification Audit Stream -->
+    <div class="card">
+      <div class="card-title">
+        <span>🔍 Recent Verification Audit Log</span>
+        <span class="badge badge-info">Audit Trail</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Queried Hash</th>
+              <th>Verifier Agency</th>
+              <th>IP Address</th>
+              <th>Result</th>
+              <th>Fee Logged</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="log : ${recentLogs}">
+              <td th:text="${#temporals.format(log.verificationTime, 'yyyy-MM-dd HH:mm:ss')}">2026-09-27 10:00:00</td>
+              <td><span class="hash-pill" th:text="${#strings.substring(log.certificateHash,0,16) + '...'}">a8f5...</span></td>
+              <td th:text="${log.verifierAgency}">Background Agency</td>
+              <td th:text="${log.verifierIp}">127.0.0.1</td>
+              <td>
+                <span th:if="${log.isValid}" class="badge badge-success">Authentic Match</span>
+                <span th:unless="${log.isValid}" class="badge badge-danger">Invalid / Failed</span>
+              </td>
+              <td style="color: var(--accent-green); font-weight: 600;" th:text="'$' + ${log.feeCharged}">$2.50</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(recentLogs)}">
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No verification queries recorded yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>CertiChain Platform &copy; 2026 | Powered by Spring Boot, MySQL & SHA-256 Cryptography</p>
+  </footer>
+</body>
+</html>

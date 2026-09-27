@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accounting & Double-Entry Ledger | CertiChain</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      🔗 <span>CertiChain</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/verify">Public Verification</a></li>
+      <li><a href="/certificates">Certificates</a></li>
+      <li><a href="/accounting" class="active">Accounting & Billing</a></li>
+      <li><a href="/reports">Financial Reports</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Section 1: Customer Invoices (API Queries) -->
+    <div class="card">
+      <div class="card-title">
+        <span>📄 Customer Invoices (Background Check Agencies)</span>
+        <span class="badge badge-info">Accounts Receivable</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Invoice #</th>
+              <th>Customer Agency</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="inv : ${invoices}">
+              <td style="font-weight: 600;" th:text="${inv.invoiceNumber}">INV-001</td>
+              <td th:text="${inv.customer.name}">Agency Corp</td>
+              <td style="color: var(--accent-green); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(inv.amount, 1, 2)}">$500.00</td>
+              <td th:text="${inv.invoiceDate}">2026-09-27</td>
+              <td>
+                <span th:if="${inv.status.name() == 'PAID'}" class="badge badge-success">Paid</span>
+                <span th:if="${inv.status.name() == 'POSTED'}" class="badge badge-warning">Unpaid / Posted</span>
+              </td>
+              <td>
+                <form th:if="${inv.status.name() == 'POSTED'}" th:action="@{'/accounting/invoices/' + ${inv.id} + '/pay'}" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-sm btn-primary">Receive Bank Payment</button>
+                </form>
+                <span th:if="${inv.status.name() == 'PAID'}" style="color: var(--text-muted); font-size: 0.8rem;">Settled</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 2: Vendor Bills (Cloud Hosting & HSM) -->
+    <div class="card">
+      <div class="card-title">
+        <span>🏢 Cloud Vendor Bills (Infrastructure & Security)</span>
+        <span class="badge badge-warning">Accounts Payable</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Bill #</th>
+              <th>Vendor</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="bill : ${bills}">
+              <td style="font-weight: 600;" th:text="${bill.billNumber}">BILL-001</td>
+              <td th:text="${bill.vendor.name}">AWS Cloud</td>
+              <td style="color: var(--accent-red); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(bill.amount, 1, 2)}">$1200.00</td>
+              <td th:text="${bill.billDate}">2026-09-27</td>
+              <td>
+                <span th:if="${bill.status.name() == 'PAID'}" class="badge badge-success">Paid</span>
+                <span th:if="${bill.status.name() == 'POSTED'}" class="badge badge-danger">Due / Unpaid</span>
+              </td>
+              <td>
+                <form th:if="${bill.status.name() == 'POSTED'}" th:action="@{'/accounting/bills/' + ${bill.id} + '/pay'}" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-sm" style="background: var(--accent-amber); color: #000;">Pay via Bank</button>
+                </form>
+                <span th:if="${bill.status.name() == 'PAID'}" style="color: var(--text-muted); font-size: 0.8rem;">Disbursed</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 3: Double-Entry Balanced Journal Entries -->
+    <div class="card">
+      <div class="card-title">
+        <span>⚖️ Balanced Double-Entry Journal Records</span>
+        <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: var(--accent-purple); border: 1px solid rgba(139, 92, 246, 0.4);">Debit = Credit Ledger</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Entry #</th>
+              <th>Date</th>
+              <th>Journal</th>
+              <th>Reference</th>
+              <th>Total Debit ($)</th>
+              <th>Total Credit ($)</th>
+              <th>Ledger Lines</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="entry : ${journalEntries}">
+              <td style="font-family: monospace; font-weight: 600;" th:text="${entry.entryNumber}">JE-2026-001</td>
+              <td th:text="${entry.entryDate}">2026-09-27</td>
+              <td th:text="${entry.journal.name}">Sales Journal</td>
+              <td th:text="${entry.reference}">INV-001</td>
+              <td style="color: var(--accent-cyan); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(entry.totalDebit, 1, 2)}">$500.00</td>
+              <td style="color: var(--accent-green); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(entry.totalCredit, 1, 2)}">$500.00</td>
+              <td>
+                <div th:each="item : ${entry.items}" style="font-size: 0.8rem; margin-bottom: 0.2rem;">
+                  <span th:text="${item.account.name}">Bank</span>: 
+                  <span th:if="${item.debit != null and item.debit.doubleValue() &gt; 0}" style="color: var(--accent-cyan);" th:text="'Dr. $' + ${item.debit}">Dr. $500</span>
+                  <span th:if="${item.credit != null and item.credit.doubleValue() &gt; 0}" style="color: var(--accent-green);" th:text="'Cr. $' + ${item.credit}">Cr. $500</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>CertiChain Platform &copy; 2026 | Powered by Spring Boot, MySQL & SHA-256 Cryptography</p>
+  </footer>
+</body>
+</html>

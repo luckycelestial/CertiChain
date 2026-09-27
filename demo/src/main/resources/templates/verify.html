@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Verification Portal | CertiChain</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      🔗 <span>CertiChain</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/verify" class="active">Public Verification</a></li>
+      <li><a href="/certificates">Certificates</a></li>
+      <li><a href="/accounting">Accounting & Billing</a></li>
+      <li><a href="/reports">Financial Reports</a></li>
+    </ul>
+  </nav>
+
+  <div class="container" style="max-width: 900px;">
+    
+    <div class="hero" style="padding: 2.5rem 1rem;">
+      <h1>Public Credential Verification Portal</h1>
+      <p>Enter any certificate's 64-character SHA-256 cryptographic hash to instantly verify authenticity and tamper-resistance against the blockchain ledger.</p>
+
+      <!-- Hash Search Form -->
+      <form action="/verify" method="GET" style="max-width: 700px; margin: 0 auto; display: flex; gap: 0.5rem;">
+        <input type="text" name="hash" class="form-control" style="flex: 1; font-family: monospace;" 
+               placeholder="Paste SHA-256 hash here (e.g. 5e884898da28...)" 
+               th:value="${searchedHash}" required>
+        <button type="submit" class="btn btn-primary">🔍 Verify Hash</button>
+      </form>
+    </div>
+
+    <!-- Verification Result Display -->
+    <div th:if="${result != null}">
+      
+      <!-- Valid Result -->
+      <div th:if="${result.valid}" class="verification-result valid">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="font-size: 2rem;">✅</div>
+            <div>
+              <h2 style="font-size: 1.35rem; color: var(--accent-green);">Authentic Credential Verified</h2>
+              <p style="color: var(--text-muted); font-size: 0.85rem;" th:text="${result.message}">Cryptographically verified on-chain.</p>
+            </div>
+          </div>
+          <span class="badge badge-success" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">Status: VALID</span>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 1.5rem;">
+          <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 10px;">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Student Name</div>
+            <div style="font-size: 1.15rem; font-weight: 700;" th:text="${result.studentName}">Pavithran P N</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 10px;">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Degree Program</div>
+            <div style="font-size: 1.15rem; font-weight: 700;" th:text="${result.degree + ' (' + result.major + ')'}">B.Tech AIDS</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 10px;">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Issuing Institution</div>
+            <div style="font-size: 1.15rem; font-weight: 700;" th:text="${result.institutionName}">Sri Eshwar College of Engineering</div>
+            <small style="color: var(--accent-cyan);" th:text="'Code: ' + ${result.institutionCode}">SECE-7228</small>
+          </div>
+          <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 10px;">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Certificate Number & Date</div>
+            <div style="font-size: 1.15rem; font-weight: 700;" th:text="${result.certificateNumber}">CERT-2026-001</div>
+            <small style="color: var(--text-muted);" th:text="'Issued: ' + ${result.issueDate}">2026-06-15</small>
+          </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+          <div style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.25rem;">Cryptographic SHA-256 Fingerprint:</div>
+          <code style="font-family: monospace; font-size: 0.85rem; color: var(--accent-cyan); word-break: break-all;" th:text="${result.hash}">hash_here</code>
+        </div>
+      </div>
+
+      <!-- Invalid / Tampered Result -->
+      <div th:unless="${result.valid}" class="verification-result invalid">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+          <div style="font-size: 2rem;">❌</div>
+          <div>
+            <h2 style="font-size: 1.35rem; color: var(--accent-red);" th:text="${result.status == 'REVOKED' ? 'Revoked Certificate' : 'Verification Failed: Tampered or Not Found'}">Verification Failed</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;" th:text="${result.message}">Invalid hash or non-existent record.</p>
+          </div>
+        </div>
+        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px;">
+          <div style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.25rem;">Submitted Hash:</div>
+          <code style="font-family: monospace; font-size: 0.85rem; color: var(--accent-red); word-break: break-all;" th:text="${result.hash}">hash_here</code>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <p>CertiChain Platform &copy; 2026 | Powered by Spring Boot, MySQL & SHA-256 Cryptography</p>
+  </footer>
+</body>
+</html>
