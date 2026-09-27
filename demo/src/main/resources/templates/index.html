@@ -7,7 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -32,7 +32,7 @@
       <p>Tamper-proof academic credential issuance, SHA-256 cryptographic verification, and integrated double-entry accounting.</p>
       <div style="display: flex; justify-content: center; gap: 1rem;">
         <a href="/verify" class="btn btn-primary">🔍 Verify Certificate Hash</a>
-        <a href="/certificates" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;">🎓 Issue New Certificate</a>
+        <a href="/certificates" class="btn btn-secondary">🎓 Issue New Certificate</a>
       </div>
     </div>
 
@@ -41,22 +41,22 @@
       <div class="stat-card">
         <h3>Issued Certificates</h3>
         <div class="value" th:text="${totalCerts}">0</div>
-        <p style="color: var(--accent-green); font-size: 0.8rem; margin-top: 0.4rem;">✓ Tamper-proof SHA-256</p>
+        <p style="color: var(--color-success); font-size: 0.82rem; font-weight: 600; margin-top: 0.4rem;">✓ Tamper-proof SHA-256</p>
       </div>
       <div class="stat-card">
         <h3>Verification Queries</h3>
         <div class="value" th:text="${totalVerifications}">0</div>
-        <p style="color: var(--accent-cyan); font-size: 0.8rem; margin-top: 0.4rem;">⚡ Instant API Lookups</p>
+        <p style="color: var(--primary); font-size: 0.82rem; font-weight: 600; margin-top: 0.4rem;">⚡ Instant API Lookups</p>
       </div>
       <div class="stat-card">
         <h3>Platform Revenue</h3>
         <div class="value" th:text="'$' + ${#numbers.formatDecimal(financials.totalRevenue, 1, 2)}">$0.00</div>
-        <p style="color: var(--accent-blue); font-size: 0.8rem; margin-top: 0.4rem;">📊 Double-Entry Balanced</p>
+        <p style="color: var(--color-info); font-size: 0.82rem; font-weight: 600; margin-top: 0.4rem;">📊 Double-Entry Balanced</p>
       </div>
       <div class="stat-card">
         <h3>Accredited Institutions</h3>
         <div class="value" th:text="${totalInstitutions}">0</div>
-        <p style="color: var(--accent-purple); font-size: 0.8rem; margin-top: 0.4rem;">🏛️ Verified Registrars</p>
+        <p style="color: var(--text-muted); font-size: 0.82rem; font-weight: 600; margin-top: 0.4rem;">🏛️ Verified Registrars</p>
       </div>
     </div>
 
@@ -81,7 +81,7 @@
           </thead>
           <tbody>
             <tr th:each="cert : ${recentCerts}">
-              <td style="font-weight: 600;" th:text="${cert.certificateNumber}">CERT-001</td>
+              <td style="font-weight: 700;" th:text="${cert.certificateNumber}">CERT-001</td>
               <td th:text="${cert.studentName}">John Doe</td>
               <td th:text="${cert.degree + ' (' + cert.major + ')'}">B.Tech CSE</td>
               <td th:text="${cert.institution.name}">Anna University</td>
@@ -130,7 +130,7 @@
                 <span th:if="${log.isValid}" class="badge badge-success">Authentic Match</span>
                 <span th:unless="${log.isValid}" class="badge badge-danger">Invalid / Failed</span>
               </td>
-              <td style="color: var(--accent-green); font-weight: 600;" th:text="'$' + ${log.feeCharged}">$2.50</td>
+              <td style="color: var(--color-success); font-weight: 700;" th:text="'$' + ${log.feeCharged}">$2.50</td>
             </tr>
             <tr th:if="${#lists.isEmpty(recentLogs)}">
               <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No verification queries recorded yet.</td>

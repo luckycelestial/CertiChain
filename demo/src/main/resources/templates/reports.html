@@ -7,7 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -27,7 +27,7 @@
 
   <div class="container">
     
-    <div class="hero" style="padding: 2rem 1rem;">
+    <div class="hero" style="padding: 2.5rem 1.5rem;">
       <h1>Platform Financial & Budget Statements</h1>
       <p>Real-time Balance Sheet, Profit & Loss Account, and Operational Unit Budget performance derived from our double-entry ledger.</p>
     </div>
@@ -42,7 +42,7 @@
           <span class="badge badge-success">Income vs Expenses</span>
         </div>
         
-        <table style="margin-bottom: 1rem;">
+        <table style="margin-bottom: 1.5rem;">
           <thead>
             <tr>
               <th>Account Category</th>
@@ -51,27 +51,27 @@
           </thead>
           <tbody>
             <tr>
-              <td style="font-weight: 600; color: var(--accent-green);">Total Operating Revenue</td>
-              <td style="text-align: right; font-weight: 700; color: var(--accent-green);" th:text="'$' + ${#numbers.formatDecimal(report.totalRevenue, 1, 2)}">$0.00</td>
+              <td style="font-weight: 700; color: var(--color-success);">Total Operating Revenue</td>
+              <td style="text-align: right; font-weight: 800; color: var(--color-success);" th:text="'$' + ${#numbers.formatDecimal(report.totalRevenue, 1, 2)}">$0.00</td>
             </tr>
             <tr th:each="rev : ${report.revenueBreakdown}">
-              <td style="padding-left: 2rem; font-size: 0.85rem; color: var(--text-muted);" th:text="${rev.key}">API Revenue</td>
-              <td style="text-align: right; font-size: 0.85rem;" th:text="'$' + ${#numbers.formatDecimal(rev.value, 1, 2)}">$0.00</td>
+              <td style="padding-left: 2rem; font-size: 0.88rem; color: var(--text-muted);" th:text="${rev.key}">API Revenue</td>
+              <td style="text-align: right; font-size: 0.88rem; font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(rev.value, 1, 2)}">$0.00</td>
             </tr>
             <tr>
-              <td style="font-weight: 600; color: var(--accent-red);">Total Operating Expenses</td>
-              <td style="text-align: right; font-weight: 700; color: var(--accent-red);" th:text="'$' + ${#numbers.formatDecimal(report.totalExpenses, 1, 2)}">$0.00</td>
+              <td style="font-weight: 700; color: var(--primary);">Total Operating Expenses</td>
+              <td style="text-align: right; font-weight: 800; color: var(--primary);" th:text="'$' + ${#numbers.formatDecimal(report.totalExpenses, 1, 2)}">$0.00</td>
             </tr>
             <tr th:each="exp : ${report.expenseBreakdown}">
-              <td style="padding-left: 2rem; font-size: 0.85rem; color: var(--text-muted);" th:text="${exp.key}">Server Hosting</td>
-              <td style="text-align: right; font-size: 0.85rem;" th:text="'$' + ${#numbers.formatDecimal(exp.value, 1, 2)}">$0.00</td>
+              <td style="padding-left: 2rem; font-size: 0.88rem; color: var(--text-muted);" th:text="${exp.key}">Server Hosting</td>
+              <td style="text-align: right; font-size: 0.88rem; font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(exp.value, 1, 2)}">$0.00</td>
             </tr>
           </tbody>
         </table>
 
-        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-weight: 700;">Net Platform Operating Profit:</span>
-          <span style="font-size: 1.25rem; font-weight: 800; color: var(--accent-cyan);" th:text="'$' + ${#numbers.formatDecimal(report.netProfit, 1, 2)}">$0.00</span>
+        <div style="background: var(--surface-muted); border: 1px solid var(--border-subtle); padding: 1.1rem; border-radius: var(--input-radius); display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 700; color: var(--text-foreground);">Net Platform Operating Profit:</span>
+          <span style="font-size: 1.35rem; font-weight: 800; color: var(--color-info);" th:text="'$' + ${#numbers.formatDecimal(report.netProfit, 1, 2)}">$0.00</span>
         </div>
       </div>
 
@@ -82,7 +82,7 @@
           <span class="badge badge-info">Assets & Liabilities</span>
         </div>
 
-        <table style="margin-bottom: 1rem;">
+        <table style="margin-bottom: 1.5rem;">
           <thead>
             <tr>
               <th>Account Category</th>
@@ -91,27 +91,27 @@
           </thead>
           <tbody>
             <tr>
-              <td style="font-weight: 600; color: var(--accent-cyan);">Total Platform Assets</td>
-              <td style="text-align: right; font-weight: 700; color: var(--accent-cyan);" th:text="'$' + ${#numbers.formatDecimal(report.totalAssets, 1, 2)}">$0.00</td>
+              <td style="font-weight: 700; color: var(--color-info);">Total Platform Assets</td>
+              <td style="text-align: right; font-weight: 800; color: var(--color-info);" th:text="'$' + ${#numbers.formatDecimal(report.totalAssets, 1, 2)}">$0.00</td>
             </tr>
             <tr th:each="asset : ${report.assetBreakdown}">
-              <td style="padding-left: 2rem; font-size: 0.85rem; color: var(--text-muted);" th:text="${asset.key}">Bank Assets</td>
-              <td style="text-align: right; font-size: 0.85rem;" th:text="'$' + ${#numbers.formatDecimal(asset.value, 1, 2)}">$0.00</td>
+              <td style="padding-left: 2rem; font-size: 0.88rem; color: var(--text-muted);" th:text="${asset.key}">Bank Assets</td>
+              <td style="text-align: right; font-size: 0.88rem; font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(asset.value, 1, 2)}">$0.00</td>
             </tr>
             <tr>
-              <td style="font-weight: 600; color: var(--accent-amber);">Total Platform Liabilities</td>
-              <td style="text-align: right; font-weight: 700; color: var(--accent-amber);" th:text="'$' + ${#numbers.formatDecimal(report.totalLiabilities, 1, 2)}">$0.00</td>
+              <td style="font-weight: 700; color: #92400e;">Total Platform Liabilities</td>
+              <td style="text-align: right; font-weight: 800; color: #92400e;" th:text="'$' + ${#numbers.formatDecimal(report.totalLiabilities, 1, 2)}">$0.00</td>
             </tr>
             <tr th:each="liab : ${report.liabilityBreakdown}">
-              <td style="padding-left: 2rem; font-size: 0.85rem; color: var(--text-muted);" th:text="${liab.key}">Vendor Payables</td>
-              <td style="text-align: right; font-size: 0.85rem;" th:text="'$' + ${#numbers.formatDecimal(liab.value, 1, 2)}">$0.00</td>
+              <td style="padding-left: 2rem; font-size: 0.88rem; color: var(--text-muted);" th:text="${liab.key}">Vendor Payables</td>
+              <td style="text-align: right; font-size: 0.88rem; font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(liab.value, 1, 2)}">$0.00</td>
             </tr>
           </tbody>
         </table>
 
-        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-weight: 700;">Total Platform Equity:</span>
-          <span style="font-size: 1.25rem; font-weight: 800; color: var(--accent-purple);" th:text="'$' + ${#numbers.formatDecimal(report.totalEquity, 1, 2)}">$0.00</span>
+        <div style="background: var(--surface-muted); border: 1px solid var(--border-subtle); padding: 1.1rem; border-radius: var(--input-radius); display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 700; color: var(--text-foreground);">Total Platform Equity:</span>
+          <span style="font-size: 1.35rem; font-weight: 800; color: var(--primary);" th:text="'$' + ${#numbers.formatDecimal(report.totalEquity, 1, 2)}">$0.00</span>
         </div>
       </div>
 
@@ -128,22 +128,22 @@
         <div class="stat-card">
           <h3>Planned Target Revenue</h3>
           <div class="value" th:text="'$' + ${#numbers.formatDecimal(report.plannedBudgetRevenue, 1, 2)}">$120,000.00</div>
-          <small style="color: var(--text-muted);">Annual Allocation</small>
+          <small style="color: var(--text-muted); font-weight: 600;">Annual Allocation</small>
         </div>
         <div class="stat-card">
           <h3>Actual Realized Revenue</h3>
-          <div class="value" style="color: var(--accent-green);" th:text="'$' + ${#numbers.formatDecimal(report.actualBudgetRevenue, 1, 2)}">$0.00</div>
-          <small style="color: var(--accent-green);">Earned to date</small>
+          <div class="value" style="color: var(--color-success);" th:text="'$' + ${#numbers.formatDecimal(report.actualBudgetRevenue, 1, 2)}">$0.00</div>
+          <small style="color: var(--color-success); font-weight: 600;">Earned to date</small>
         </div>
         <div class="stat-card">
           <h3>Planned Expense Cap</h3>
           <div class="value" th:text="'$' + ${#numbers.formatDecimal(report.plannedBudgetExpense, 1, 2)}">$35,000.00</div>
-          <small style="color: var(--text-muted);">Cloud & Infrastructure Cap</small>
+          <small style="color: var(--text-muted); font-weight: 600;">Cloud & Infrastructure Cap</small>
         </div>
         <div class="stat-card">
           <h3>Actual Operating Cost</h3>
-          <div class="value" style="color: var(--accent-red);" th:text="'$' + ${#numbers.formatDecimal(report.actualBudgetExpense, 1, 2)}">$0.00</div>
-          <small style="color: var(--text-muted);">Disbursed to date</small>
+          <div class="value" style="color: var(--primary);" th:text="'$' + ${#numbers.formatDecimal(report.actualBudgetExpense, 1, 2)}">$0.00</div>
+          <small style="color: var(--text-muted); font-weight: 600;">Disbursed to date</small>
         </div>
       </div>
     </div>
